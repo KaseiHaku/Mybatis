@@ -1,0 +1,142 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kasei.mybatis.module2.a03dao.b02sql.a02b02_sql">
+
+	<!-- 
+	#{} : 表示一个占位符
+	${} ： 表示拼接 sql 串，将接受到参数不加任何修饰拼接在 sql 串中，容易引起 sql 注入
+		如果参数是基本类型，那么${}中只能使用value，即${value}
+	 -->
+
+	<!-- ###################### 增  删  改  查  ########################### -->
+	<!-- insert -->
+	<insert id="insertUser" parameterType="com.kasei.mybatis.module2.a01entity.A01User">
+		<!-- 获取自增主键的方法:
+			keyProperty 属性：将查询到的主键值放入传入参数的 XX 属性中
+		
+		<selectKey keyProperty="XX" resultType="java.lang.Integer" order="AFTER">
+			select last_insert_id()
+		</selectKey>
+		-->
+		
+		<!-- 使用mysql uuid() 生成主键:
+		
+		<selectKey keyProperty="XX" resultType="java.lang.String" order="BEFORE">
+			select uuid()
+		</selectKey>
+		-->
+		
+		<!-- oracle 序列:
+		
+		<selectKey keyProperty="XX" resultType="java.lang.String" order="BEFORE">
+			select 序列名.nextval()
+		</selectKey>
+		-->
+		
+		insert into mybatis_user(id, name, age) 
+		values(#{id}, #{name}, #{age})<!-- 这里的占位符就是对象里的属性 -->
+	</insert>
+	
+    <!-- delete -->
+    <delete id="deleteUser" parameterType="int">
+    	delete from mybatis_user 
+    	where id=#{id}
+    </delete>
+       
+    <!-- update -->
+    <update id="updateUser" parameterType="A01User">
+    	update mybatis_user 
+    	set name=#{name}, age=#{age} 
+    	where id=#{id}
+    </update>
+
+	<!-- ###################### 列名跟属性名不一致的情况  ########################### -->
+    <!-- 方法一 -->
+    <select id="getDog"
+    		parameterType="int" 
+    		resultType="A02Dog">
+    	select id, dog_name name, dog_kind kind 
+    	from mybatis_dog 
+    	where id=#{id}
+    </select>
+    
+    <!-- 方法二 -->
+    <select id="getDog2" 
+    		parameterType="int" 
+    		resultMap="columnMapDog">
+    	select * 
+    	from mybatis_dog 
+    	where id=#{id}
+    </select>   
+    <resultMap type="A02Dog" id="columnMapDog">
+    	<id property="id" column="id"></id>
+    	<result property="name" column="dog_name"/>
+    	<result property="kind" column="dog_kind"/>
+    </resultMap>
+    
+    
+    <!-- ###################### 动态 sql ########################### -->
+    <!-- 
+    if
+    where
+    trim
+    set
+    foreach
+    choose when otherwise
+     -->
+     
+    <select id="if"
+    		parameterType="A01User"
+    		resultType="A01User">  	
+    	select *
+    	from mybatis_user
+    	<where> <!-- 自动的去掉条件中第一个 and 或者没有条件的 where -->
+	    	<if test="id!=null">and id=#{id} </if>
+	    	<if test="name!=null and name!=''">and name like '%${name}%' </if><!-- ${} 表示其中的内容不进行任何处理，直接原样显示 -->
+	    	<if test="age!=null"> and age=#{age} </if>
+    	</where>
+    </select>
+    
+    <select id="choose" resultType="A01User">
+    	select 
+    	<choose>
+    		<when test="value == 1">id from mybatis_user </when>
+    		<when test="value == 2">id, name from mybatis_user </when>
+    		<otherwise>id, name, age from mybatis_user </otherwise>
+    	</choose>
+    </select>
+    
+    <!-- mybatis 模糊查询 
+    <select id="bb">
+    	<bind name="pattern" value="'%' + _parameter.name + '%'" />
+    	select * from tty
+    	where name like #{pattern}
+    	
+    	
+    	select * from tty
+    	where name like concat('%',#{value},'%')
+    	
+    	
+    	select * from tty
+    	where name like '%${name}%'
+    </select>
+     
+     -->
+     
+    <!-- 定义 sql 片段 -->
+    <sql id="sqlSegment">
+    </sql>
+    
+	 
+	<!-- ###################### 调用存储过程 ########################### -->
+	<!-- 
+	<update id="" parameterType="Map" statementType="CALLABLE">
+		<![CDATA[ 
+			call demo(#{oldWrongId, mode=IN, jdbcType=INTEGER}, #{newWrongId, mode=IN, jdbcType=VARCHAR})
+		]]>  
+	</update>
+	 -->
+	
+</mapper>

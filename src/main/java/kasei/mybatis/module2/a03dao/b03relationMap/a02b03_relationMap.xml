@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kasei.mybatis.module2.a03dao.b03relationMap.a02b03_relationMap">
+
+	 <!-- ###################### 关联关系：一对一  ########################### -->
+    <!-- 方式一：join 表连接  -->
+    <select id="getWife" parameterType="int" resultMap="columnMapWife">
+    	select w.id wid, w.name wname, w.husband_id, h.id hid, h.name hname 
+    	from mybatis_wife w, mybatis_husband h 
+    	where w.id=#{id} and w.id=h.id
+    </select>
+    <resultMap id="columnMapWife" type="A03Wife">
+    	<id property="id" column="wid"></id>
+    	<result property="name" column="wname"/>
+    	<association property="husband" javaType="A03Husband">
+    		<id property="id" column="hid"></id>
+    		<result property="name" column="hname"/>
+    	</association>
+    </resultMap>
+    
+    <!-- 方式二：分两次查询 -->
+    <select id="getWife2" parameterType="int" resultMap="columnMapWife2">
+    	select id, name, husband_id 
+    	from mybatis_wife 
+    	where id=#{id}
+    </select>
+    <resultMap id="columnMapWife2" type="A03Wife">
+    	<id property="id" column="id"></id>
+    	<result property="name" column="name"/>
+    	<association property="husband" 
+    			select="getHusband"
+    			column="husband_id"><!-- 传递当前的 husband 列的数据给 getHusband 这个查询 -->
+    	</association>
+    </resultMap>
+    <select id="getHusband" parameterType="int" resultType="A03Husband">
+    	select * 
+    	from mybatis_husband 
+    	where id=#{id}
+    </select>
+
+
+	<!-- ###################### 关联关系：一对多  ########################### -->
+    <!-- 方式一：join 表连接  -->
+    <select id="getTeacher" parameterType="int" resultMap="columnMapTeacher">
+    	select t.id tid, t.name tname, s.id sid, s.name sname, s.teacher_id  
+    	from mybatis_teacher t, mybatis_student s 
+    	where t.id=#{id} and s.teacher_id=t.id
+    </select>
+    <resultMap id="columnMapTeacher" type="A04Teacher">
+    	<id property="id" column="tid"></id>
+    	<result property="name" column="tname"/>
+    	<collection property="students" ofType="A04Student">
+    		<id property="id" column="sid"></id>
+    		<result property="name" column="sname"/>
+    	</collection>
+    </resultMap>
+
+    <!-- 以下是多层一对多关系的查询，就是在 collection 中再加 collection
+    <resultMap id="MoodResult" type="Mood">
+        <id property="mood_id" column="mood_id" />
+        <association property="user" javaType="User">
+               <id property="id" column="mood_userid"/>
+            <result property="name" column="mood_user"/>
+        </association>
+        <collection property="moodComments" ofType="MoodComment">
+            <id property="moodcommentid" column="moodcommentid" />
+            <association property="user" javaType="User">
+                <id property="id" column="comment_userid" />
+                <result property="name" column="comment_user"/>
+            </association>
+            <collection property="moodCommentReplys" ofType="MoodCommentReply">
+                <association property="user" javaType="User">
+                    <id property="id" column="reply_userid" />
+                    <result property="name" column="reply_user"/>
+                </association>
+            </collection>
+        </collection>
+    </resultMap>
+    -->
+
+
+    <!-- 方式二：分两次查询 -->
+    <select id="getTeacher2" parameterType="int" resultMap="columnMapTeacher2">
+    	select id, name
+    	from mybatis_teacher 
+    	where id=#{id}
+    </select>
+    <resultMap id="columnMapTeacher2" type="A04Teacher">
+    	<id property="id" column="id"></id>
+    	<result property="name" column="name"/>
+    	<collection property="students" select="getStudent" column="id"></collection>
+    </resultMap>
+    <select id="getStudent" parameterType="int" resultType="A04Student">
+    	select id, name, teacher_id
+    	from mybatis_student 
+    	where teacher_id=#{var1}
+    </select>
+
+    <!-- 多层分次查询也简单，一层调用一层的 resultMap 即可 -->
+
+
+
+	
+</mapper>

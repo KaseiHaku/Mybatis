@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- namespace == UserMapper2 接口的全类名 -->
+<mapper namespace="com.kasei.mybatis.module1.a03mapper.UserMapper2">
+
+	<!-- 
+	statement 中的 id 值 == UserMapper2 接口中的方法名相同
+	parameterType 的参数类型 == UserMapper2 接口中的方法的形参类型
+	resultType 的类型  == UserMapper2 接口中的方法的返回类型
+	 -->
+
+	<select id="selectAll"
+			resultType="com.kasei.mybatis.module1.a01entity.User">
+		select * from mybatis_user
+	</select>
+	
+	<select id="selectOne" 
+			resultType="com.kasei.mybatis.module1.a01entity.User">
+		select * 
+		from mybatis_user
+		where id=#{id}
+	</select>
+	
+	
+	<select id="returnMap" resultType="map">
+		select name, age
+		from mybatis_user
+		where id=1
+	</select>
+</mapper>

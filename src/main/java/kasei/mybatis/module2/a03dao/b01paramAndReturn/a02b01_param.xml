@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kasei.mybatis.module2.a03dao.b01paramAndReturn.a02b01_param">
+
+	<!-- mybatis 参数传递规则：
+		1：只能传递单个对象，该对象包括 基本类型、java bean、Array、List、Set、Map
+		2: 多个相同的对象，用 Array List Set 等封装
+		3：多个不同的对象，用 Map 封装后传入
+	 -->
+
+	<!-- ######################### 参数类型  ############################ -->
+	<!-- 参数绑定：基本类型(Byte, char, String, int, double, Date) -->
+	<select id="baseType" 
+			parameterType="int" 
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+		where id=#{value}	
+		<!-- 基本类型用 value -->
+	</select>
+	
+	<!-- 参数绑定：java bean -->
+	<select id="javaBean"
+			parameterType="com.kasei.mybatis.module2.a01entity.A01User" 
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+		where name=#{name} and age=#{age} 
+		<!-- java bean 用 java bean 的属性名称做绑定 -->
+	</select>
+	
+	<!-- 参数绑定：嵌套 java bean -->
+	<select id="nestJavaBean"
+			parameterType="com.kasei.mybatis.module2.a03dao.b01paramAndReturn.NestJavaBean" 
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+		where name=#{user.name} and age=#{user.age}
+		<!-- 嵌套 java bean 使用 属性名.属性名.xxx -->
+	</select>
+	
+	<!-- 参数绑定：HashMap -->
+	<select id="map"
+			parameterType="Map" 
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		<!-- HashMap 使用 key 名来绑定 -->
+		select id, name, age 
+		from mybatis_user
+		where name=#{name} and age=#{age}
+		
+		<!-- 使用 index 来绑定参数
+		select id, name, age 
+		from mybatis_user
+		where name=#{0} and age=#{1}
+		 -->
+		 
+		<!-- 使用注解来绑定参数：@Param("paramName")
+		select id, name, age 
+		from mybatis_user
+		where name=#{name,jdbcType=VARCHAR} and age=#{age,jdbcType=INTEGER}
+		 -->
+	</select>
+	
+	<!-- 参数绑定：List, Set -->
+	<select id="list"
+			parameterType="java.util.List"
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+		<where>
+			<foreach collection="list" item="haha"  index="index"
+					open="id in (" separator="," close=")">
+    			#{haha}
+    		</foreach>
+		</where>
+	</select>
+	
+	<!-- 参数绑定：Array -->
+	<select id="array"
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+		<where>
+			<foreach collection="array" item="haha"  index="index"
+					open="id in (" separator="," close=")">
+    			#{haha}
+    		</foreach>
+		</where>
+	</select>
+	
+	<!-- 参数绑定： parameterMap 只能用于返回一个记录 -->
+	<parameterMap id="parameterMap" 
+			type="java.util.Map">
+		<parameter property="id" mode="IN" jdbcType="INTEGER"/>
+		<parameter property="name" mode="OUT" jdbcType="VARCHAR"/>
+		<parameter property="age" mode="OUT" jdbcType="INTEGER"/>
+	</parameterMap>
+	<select id="parameterMap"
+			parameterMap="parameterMap"
+			resultType="com.kasei.mybatis.module2.a01entity.A01User"
+			statementType="PREPARED">
+		select id, name, age 
+		from mybatis_user
+		where id=#{id}
+	</select>
+	
+	<!-- ######################### 返回类型  ############################ -->
+	<!-- 返回类型：基本类型 -->
+	<select id="returnBaseType" resultType="Integer">
+		select id
+		from mybatis_user;
+	</select>
+	
+	<!-- 返回类型：java bean，上面的参数类型里的全是 -->
+	<select id="returnJavaBean" 
+			resultType="com.kasei.mybatis.module2.a01entity.A01User">
+		select id, name, age 
+		from mybatis_user
+	</select>
+	
+	 
+	<!-- 返回类型：自定义类型 -->
+	<select id="returnCustom" resultMap="customResultMap">
+		select name, age
+		from mybatis_user
+	</select>
+	<resultMap id="customResultMap" 
+			type="com.kasei.mybatis.module2.a03dao.b01paramAndReturn.CustomResult">
+		<result property="name" column="name"/>
+		<result property="age" column="age"/>
+	</resultMap>
+	
+	<!-- 返回类型：Map -->
+	<select id="returnMap" resultType="java.util.Map">
+		select id, name, age
+		from mybatis_user		
+	</select>
+	<resultMap type="java.util.Map" id="returnMap">
+		<result property="key" column="name" jdbcType="VARCHAR"/>
+		<result property="value" column="age" jdbcType="INTEGER"/>
+	</resultMap>	
+	
+</mapper>

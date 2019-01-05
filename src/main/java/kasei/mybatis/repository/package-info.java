@@ -1,0 +1,1 @@
+package kasei.mybatis.repository;

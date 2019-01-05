@@ -1,0 +1,167 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kasei.mybatis.module1.a01entity.UserMpper">
+
+	<!-- 增 -->
+	<insert id="insert" parameterType="com.kasei.mybatis.module1.a01entity.User">
+		<selectKey keyProperty="id" resultType="java.lang.Integer" order="AFTER">
+			select last_insert_id()
+		</selectKey>
+		insert into user
+		<trim prefix="(" suffix=")" suffixOverrides=",">
+			<if test="id != null">id, </if>
+			<if test="name != null">name, </if>
+			<if test="age != null">age, </if>
+		</trim>
+		<trim prefix="values(" suffix=")" suffixOverrides=",">
+			<if test="id != null">#{id}, </if>
+			<if test="name != null">#{name}, </if>
+			<if test="age != null">#{age}, </if>
+		</trim>
+	</insert>
+		
+	
+	<!-- 删 -->
+	<delete id="delete" parameterType="com.kasei.mybatis.module1.a01entity.User">
+		delete from user
+		<where>
+			<if test="id != null">and id=#{id} </if>
+			<if test="name != null">and name=#{name} </if>
+			<if test="age != null">and age=#{age} </if>
+		</where>
+	</delete>
+	
+	
+	<!-- 改 -->
+	<update id="update" parameterType="java.util.Map">
+		update user
+		<set>
+			<if test="value.id != null">id=#{value.id}, </if>
+			<if test="value.name != null">name=#{value.name}, </if>
+			<if test="value.age != null">age=#{value.age}, </if>
+		</set>
+		<where>
+			<if test="condition.id != null">and id=#{condition.id}</if>
+			<if test="condition.name != null">and name=#{condition.name}</if>
+			<if test="condition.age != null">and age=#{condition.age}</if>
+		</where>
+	</update>
+	
+	
+	<!-- 查 -->
+	<select id="select" 
+	        parameterType="com.kasei.mybatis.module1.a01entity.User" 
+	        resultType="com.kasei.mybatis.module1.a01entity.User">
+		select * from user
+		<where>
+			<if test="id != null">and id=#{id} </if>
+			<if test="name != null">and name=#{name} </if>
+			<if test="age != null">and age=#{age} </if>
+		</where>
+    </select>
+    
+    
+    <!-- 批量增 -->
+	<insert id="batchInsert" parameterType="java.util.List">
+        <selectKey resultType ="java.lang.Integer" keyProperty= "id" order= "AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey >
+        insert into card(
+            id,
+            serial_number,
+            balance,
+            active,
+            create_time
+        )
+        values
+        <foreach collection="list" separator="," item="item">
+            ( 
+                #{item.id}, 
+                #{item.serial_number}, 
+                #{item.balance}, 
+                #{item.active}, 
+                #{item.create_time}
+            )
+        </foreach>
+    </insert>
+    
+    
+    <!-- 批量删 -->
+	<delete id="delete" parameterType="java.util.Map">
+		delete from user
+		<where>
+			<if test="idList!=null and idList.size()>0">
+			    <foreach collection="idList" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+			</if>
+			<if test="nameList!=null and nameList.size()>0">
+			    <foreach collection="nameList" open="(" close=")" separator="," item="name">
+                    #{name}
+                </foreach>
+			</if>
+			<if test="age!=null and ageList.size()>0">
+			    <foreach collection="ageList" open="(" close=")" separator="," item="age">
+                    #{age}
+                </foreach>
+			</if>
+		</where>
+	</delete>
+    
+    
+    
+    <!-- 批量改 -->
+    <update id="update" parameterType="java.util.Map">
+		update user
+		<set>
+			<if test="value.id!=null">id=#{value.id}, </if>
+			<if test="value.name!=null">name=#{value.name}, </if>
+			<if test="value.age!=null">age=#{value.age}, </if>
+		</set>
+		<where>
+			<if test="condition.idList!=null and condition.idList.size()>0">
+			     <foreach collection="condition.idList" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+			</if>
+			<if test="condition.nameList!=null and condition.nameList.size()>0">
+			     <foreach collection="condition.nameList" open="(" close=")" separator="," item="name">
+                    #{name}
+                </foreach>
+			</if>
+			<if test="condition.ageList!=null and condition.ageList.size()>0">
+			     <foreach collection="condition.ageList" open="(" close=")" separator="," item="age">
+                    #{age}
+                </foreach>    
+			</if>
+		</where>
+	</update>
+    
+    
+    <!-- 批量查：注意日期类型 -->
+	<select id="batchSelect" parameterType="Map" resultType="com.kasei.mybatis.module1.a01entity.User">
+		select * from user
+		<where>
+			<if test="idList!=null and idList.size()>0">
+			    <foreach collection="idList" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+			</if>
+			<if test="nameList!=null and nameList.size()>0">
+			    <foreach collection="nameList" open="(" close=")" separator="," item="name">
+                    #{name}
+                </foreach>
+			</if>
+			<if test="age!=null and ageList.size()>0">
+			    <foreach collection="ageList" open="(" close=")" separator="," item="age">
+                    #{age}
+                </foreach>
+			</if>
+		</where>
+    </select>
+    
+    
+    
+</mapper>
