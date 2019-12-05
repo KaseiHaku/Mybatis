@@ -10,5 +10,10 @@ repositories {
 }
 
 dependencies {
+    compile group: 'org.mybatis', name: 'mybatis', version: '3.5.3'
 
+    
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-api', version: '5.5.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-engine', version: '5.5.2'
+    testCompile group: 'org.junit.jupiter', name: 'junit-jupiter-params', version: '5.5.2'
 }
