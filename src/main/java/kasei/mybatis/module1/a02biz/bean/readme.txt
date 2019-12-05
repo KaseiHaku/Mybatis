@@ -1,1 +1,0 @@
-本包主要用于存放 mybatis 不能由 entity 映射的而建立的 pojo

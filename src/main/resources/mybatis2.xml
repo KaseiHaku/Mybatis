@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE configuration  
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"  
+"http://mybatis.org/dtd/mybatis-3-config.dtd">  
+<configuration>  
+
+    <!-- 注意：
+    		配置文件里配置项目是有先后顺序的，依次是：
+    		properties,settings,typeAliases,typeHandlers,objectFactory,
+    		objectWrapperFactory,plugins,environments,databaseIdProvider,mappers，
+    		哪个选项不配置，它的位置空出来，但顺序必须遵循，否则会报错。   
+     -->
+     
+     
+    <!-- 加载外部属性文件 -->
+    <properties resource="properties/db.properties">
+    	 <property name="dialect" value="mysql" />
+    </properties>
+    
+    <!-- 全局配置参数 -->
+    <settings>
+    	<!-- 开启延时加载 -->
+    	<setting name="lazyLoadingEnabled" value="true"/>
+    	<setting name="aggressiveLazyLoading" value="false"/>
+    	<!-- 开启二级缓存 -->
+    	<setting name="cacheEnabled" value="true"/> 
+    	<!-- 使用 log4j 日志框架 -->
+    	<setting name="logImpl" value="LOG4J" />  	
+    </settings>
+        
+    <!-- 配置实体类别名 -->
+    <typeAliases>
+    	<!-- 对单个类配置别名 -->
+    	<typeAlias type="com.kasei.mybatis.module2.a01entity.A01User" alias="_User"/>
+    	
+    	<!-- 对某个包下的所有类配置别名，别名就是简单类名 -->
+    	<package name="com.kasei.mybatis.module2.a01entity"/>
+    </typeAliases>
+ 
+    
+    <!-- mybatis 开发环境配置 -->
+    <environments default="development">  
+        <environment id="development">  
+            <transactionManager type="JDBC" />  
+            <dataSource type="POOLED">  
+                <property name="driver" value="${driverClassName}" />  
+                <property name="url" value="${jdbc-url}" />
+                <property name="username" value="${username}" />  
+                <property name="password" value="${password}" />  
+            </dataSource>  
+        </environment>  
+    </environments> 
+    
+    <mappers>
+        <!-- mybatis 三种开发方式之一：实体类 + dao 实现类 -->
+    	<mapper resource="mappers/UserMapper1.xml"/>    	
+    	<!-- mybatis 三种开发方式之二：实体类 + dao 接口 + xml -->
+		<mapper resource="mappers/UserMapper2.xml"/>		
+		<!-- mybatis 三种开发方式之三：实体类 + dao 接口 + 注解 -->
+		<mapper class="com.kasei.mybatis.module1.a03mapper.UserMapper3"/>
+        
+       
+		<!-- mapper 接口开发模式 -->
+		<mapper class="com.kasei.mybatis.module2.a02mapper.UserMapper"/>
+		
+        <!-- 参数绑定及返回值类型 -->
+        <mapper resource="com/kasei/mybatis/module2/a03dao/b01paramAndReturn/a02b01_param.xml"/>
+        
+        <!-- sql 语句 -->
+        <mapper resource="com/kasei/mybatis/module2/a03dao/b02sql/a02b02_sql.xml"/>
+        
+        <!-- 关系映射 -->
+        <mapper resource="com/kasei/mybatis/module2/a03dao/b03relationMap/a02b03_relationMap.xml"/>
+        
+        <!-- cache -->
+        <mapper resource="com/kasei/mybatis/module2/a03dao/b04cache/a02b04_cache.xml"/>
+    </mappers>  
+    
+</configuration>  
