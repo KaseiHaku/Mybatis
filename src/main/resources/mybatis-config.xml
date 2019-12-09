@@ -54,9 +54,9 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     <mappers>
         <!-- 该部分只是引入 mapper -->
         <!-- mybatis 开发方式之一：entity + *Mapper.xml + *DaoImpl 中使用代码绑定 *Mapper.xml -->
-        <mapper resource="kasei/mybatis/repository/mysql/dao/mapper/PersonDaoMapper1.xml"/>
+        <mapper resource="kasei/mybatis/repository/mysql/dao/sqlprovider/PersonDaoMapper1.xml"/>
         <!-- mybatis 开发方式之二：entity + *Mapper.xml + *Mapper.java + *DaoImpl 中使用代码绑定 *Mapper.java -->
-        <mapper resource="kasei/mybatis/repository/mysql/dao/mapper/PersonDaoMapper2.xml"/>
+        <mapper resource="kasei/mybatis/repository/mysql/dao/sqlprovider/PersonDaoMapper2.xml"/>
         <!-- mybatis 开发方式之三：entity + *Mapper.java + AnnotationSql + *DaoImpl 中使用代码绑定 *Mapper.java-->
         <mapper class="kasei.mybatis.repository.mysql.dao.mapper.PersonDaoMapper3"/>
         <!-- mybatis 开发方式之四：entity + *Mapper.java + @SelectProvider(*SqlProvider.class) + *SqlProvider.java + *DaoImpl 中使用代码绑定 *Mapper.java-->

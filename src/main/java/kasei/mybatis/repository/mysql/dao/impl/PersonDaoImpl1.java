@@ -21,7 +21,7 @@ public class PersonDaoImpl1 implements PersonDao {
 
         // todo 3. 配置绑定的 sql 的位置
         // 需要在 mybatis-config.xml 的 <mappers> 标签中添加一个 <mapper resource="kasei/mybatis/repository/mysql/mapper/PersonDaoMapper1.xml"/>
-        String associatedXmlMapper = "kasei.mybatis.repository.mysql.dao.mapper.PersonDaoMapper1";  // 跟 PersonDaoMapper1.xml 中 <mapper> 标签的 namespace 属性值绑定
+        String associatedXmlMapper = "kasei.mybatis.repository.mysql.dao.sqlprovider.PersonDaoMapper1";  // 跟 PersonDaoMapper1.xml 中 <mapper> 标签的 namespace 属性值绑定
         String sqlIdInXmlMapper = "selectById";     // 跟 PersonDaoMapper1.xml 中 <select> 标签的 id 属性值绑定
         String sqlLocation = associatedXmlMapper + "." + sqlIdInXmlMapper;
 
