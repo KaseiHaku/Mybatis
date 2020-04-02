@@ -35,8 +35,8 @@ public class PersonDaoImpl5  {
 
 
         // todo 4. 执行查询
-        SelectStatementProvider selectStatement = SqlBuilder.select(
-                PersonDynamicSqlSupport.id, name, age)
+        SelectStatementProvider selectStatement = SqlBuilder
+                .select(PersonDynamicSqlSupport.id, name, age)  // 这里没有前缀的 name ,因为使用了静态导入
                 .from(PERSON_TABLE)
                 .where(PersonDynamicSqlSupport.id, SqlBuilder.isIn("1"))
                 .and(age, SqlBuilder.isBetween(1).and(33))
