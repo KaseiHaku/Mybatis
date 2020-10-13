@@ -40,6 +40,10 @@
         </connectionFactory>
 
         <javaTypeResolver>
+            <!-- forceBigDecimals
+                false:如果数据库中的字段类型为numeric或者decimal，在代码生成的时候根据数据库中设定的长度自动选择java类型进行转换
+                true:直接使用java.math.BigDecimal类型
+            -->
             <property name="forceBigDecimals" value="true"/>
         </javaTypeResolver>
 
