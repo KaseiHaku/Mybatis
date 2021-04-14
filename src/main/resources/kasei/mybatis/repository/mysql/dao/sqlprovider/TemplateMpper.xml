@@ -9,7 +9,7 @@
         func(String str)            #{value}        // int long boolean 类似
         func(String[] aa)           foreach collection="array"  // Mybatis 内部自动封装成 Map，并设置 key 为 array 所以这里必须是 array
         func(List aa)               foreach collection="list"   // Mybatis 内部自动封装成 Map，并设置 key 为 list 所以这里必须是 list
-        func(Set aa)                foreach // 无对应值，需要用 @Param 封装成 Map
+        func(Set aa)                foreach // 无对应值，需要用 @Param 封装成 Map, 所以 Mapper.java 中最好不要用 Set 当作参数
         func(Map map)               foreach collection="key"
         func(Object obj)            foreach collection="field"
     -->
