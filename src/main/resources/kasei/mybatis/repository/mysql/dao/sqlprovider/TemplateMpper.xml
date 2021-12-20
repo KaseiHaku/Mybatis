@@ -172,6 +172,87 @@
         </where>
     </select>
 
+    
+    <resultMap id="rmId" type="a.b.c.JavaCls" autoMapping="override global auto mapping">
+        <!--
+            当 JavaBean 没有空构造函数时，需要使用该标签，调用对应的构造函数来创建实例
+        -->
+        <constructor>
+            <!--
+                column: sql 返回结果中的列名
+                javaType: mybatis 无法确定转换类型时，需要指定，比如：使用 HashMap 接收
+                jdbcType: 在 insert, update or delete 语句中，当值为 null 时，mybatis 无法判断数据库的类型，所以需要指定
+                typeHandler: JavaType 和 JdbcType 的类型转换器
+                name: 构造函数参数名，指定该字段，允许你使用任何顺序指定构造函数的参数
+                select: Nested Select for Association 方式查询时，用于指定其他 selectId
+                resultMap: Nested Results for Association 方式查询时，用于指定其他 resultMap
+            -->
+            <idArg column="" javaType="" jdbcType="" name="" select="" resultMap="" typeHandler=""/>
+            <arg column="" javaType="" jdbcType="" name="" select="" resultMap="" typeHandler=""/>
+        </constructor>
+        
+        <!--
+            property: Java Bean Field Name
+            column: sql 返回结果中的列名
+            javaType: mybatis 无法确定转换类型时，需要指定，比如：使用 HashMap 接收
+            jdbcType: 在 insert, update or delete 语句中，当值为 null 时，mybatis 无法判断数据库的类型，所以需要指定
+            typeHandler: JavaType 和 JdbcType 的类型转换器
+        -->
+        <id property="id" column="post_id" javaType="" jdbcType="" typeHandler=""/>
+        <result property="subject" column="post_subject"/>
 
+        <!-- Nested Select for Association 
+            column: 用于嵌套查询的关联的列名，如果是 复合主键(composite keys) 那么格式如下: column="{prop1=col1,prop2=col2}"
+            select: 指定用于嵌套查询的 selectId
+            fetchType: 获取类型，覆盖全局 lazyLoadingEnabled 的配置
+            注意: 存在 1+N 的问题，
+            坑: 获取结果 list , 立即访问嵌套内容，这样会加载所有 lazy load 的数据，因此性能会非常糟糕
+        -->
+        <association property="" javaType="" jdbcType="" typeHandler="" column="" select="" fetchType="eager">
+            <result property="" column=""/>
+        </association>
+
+        <!-- Nested Results for Association 
+           columnPrefix: 列名前缀
+           notNullColumn: 默认至少有一列有值，就会创建对象；该属性可以配置 指定的 columns 有值时，才创建对象
+           resultMap: 指定另一个 resultMap 来映射嵌套对象
+           autoMapping: 覆盖全局配置的 autoMapping
+        -->
+        <association property="" javaType="" jdbcType="" typeHandler="" columnPrefix="" notNullColumn="col1,col2" resultMap="" autoMapping="" >
+            <result property="" column=""/>
+        </association>
+
+        <!-- Multiple ResultSets for Association 
+            一次性返回多个 结果集 的查询，一般用在调用 存储过程 或 函数 时，才有多个结果集
+            column: 外层列名，用于跟 foreignColumn 对应
+            foreignColumn: 嵌套类型的列名
+            resultSet: 指定使用哪一个 resultSet
+        -->
+        <association property="" javaType="" jdbcType="" typeHandler="" column="" foreignColumn="col1,col2" resultSet="">
+            <result property="" column=""/>
+        </association>
+
+        <!-- 和 association 没有任何区别，除了使用 ofType 来指定 Java 类型 -->
+        <collection property="" ofType="">
+            <result property="" column=""/>
+        </collection>
+        
+        <!--类有继承关系，通过指定字段，来映射到不同的子类
+            不同的子类有不同的字段
+        -->
+        <discriminator javaType="int" column="vehicle_type" jdbcType="" typeHandler="">
+            <case value="1" resultType="Car">
+                <result property="doorCount" column="door_count" />
+            </case>
+            <case value="2" resultType="Truck">
+                <result property="boxSize" column="box_size" />
+                <result property="extendedCab" column="extended_cab" />
+            </case>
+            <case value="3" resultType="Van">
+                <result property="powerSlidingDoor" column="power_sliding_door" />
+            </case>
+        </discriminator>
+
+    </resultMap>
 
 </mapper>
