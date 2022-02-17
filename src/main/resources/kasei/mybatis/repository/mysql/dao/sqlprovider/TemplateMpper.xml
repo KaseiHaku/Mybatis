@@ -202,6 +202,11 @@
         -->
         <id property="id" column="post_id" javaType="" jdbcType="" typeHandler=""/>
         <result property="subject" column="post_subject"/>
+        
+        <!-- 一对一关联：单向。方式零：使用级联属性 -->
+        <result column="card_id" property="idCard.id"/> <!-- 将结果集中 card_id 字段的内容，塞入到 a.b.c.JavaCls#idCard 字段上 DTO 的 id 字段上 -->
+        <result column="card_num" property="idCard.number"/>
+        <result column="card_expired_time" property="idCard.expiredTime"/>
 
         <!-- Nested Select for Association 
             column: 用于嵌套查询的关联的列名，如果是 复合主键(composite keys) 那么格式如下: column="{prop1=col1,prop2=col2}"
