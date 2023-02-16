@@ -5,6 +5,8 @@
 <mapper namespace="com.kasei.mybatis.module1.a01entity.UserMpper">
     
     <!--
+        OGNL 官方文档: https://commons.apache.org/proper/commons-ognl/language-guide.html
+
         MyBatis 可以使用 OGNL 表达式的地方：        
             1. <if test="OGNL">
             2. <select><bind value="OGNL"></select>
