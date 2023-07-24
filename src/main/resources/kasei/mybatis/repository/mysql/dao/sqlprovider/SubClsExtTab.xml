@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zhxx.energy.mapper.GatherTermMapper">
+
+
+<!--     每个子类一张独立的扩展表时的数据库设计，扩展表 id 和主表 id 相同
+create table gather_term (
+    id int(11) primary key auto_increment comment '主键',
+
+    cls varchar(8) not null comment '子类类型区分字段',
+    name varchar(32) not null comment '名称'
+) comment '采集终端表';
+
+create table gather_term_elec(
+    id int(11) primary key comment '必须和 gather_term 表主键相同',
+    ratio decimal(8,2) not null comment '变比',
+    circuit_breaker varchar(32) not null default '' comment '断路器'
+) comment '采集终端表-电';
+
+create table gather_term_water(
+    id int(11) primary key comment '必须和 gather_term 表主键相同',
+    tag_id int(11) not null comment '水表层级',
+    use_type int(1) default null comment '用水类型'
+) comment '采集终端表-水';
+
+create table gather_term_gas(
+    id int(11) primary key comment '必须和 gather_term 表主键相同',
+    ratio decimal(8,2) not null comment '变比'
+) comment '采集终端表-气';
+  -->
+  
+    <resultMap id="clsBaseQryRm" type="com.zhxx.energy.dto.GatherTermDto">
+        <discriminator javaType="string" column="cls">
+            <case value="elec" resultType="com.zhxx.energy.dto.GatherTermElecDto"/>
+            <case value="water" resultType="com.zhxx.energy.dto.GatherTermWaterDto"/>
+            <case value="gas" resultType="com.zhxx.energy.dto.GatherTermGasDto" />
+        </discriminator>
+
+    </resultMap>
+
+    <select id="clsBaseQry" parameterType="com.zhxx.energy.dto.GatherTermQryReq" resultMap="clsBaseQryRm">
+        select
+            <trim suffixOverrides=",">
+                t.*,
+                t2.name as equipmentName,
+                <if test="cls == @com.zhxx.energy.enums.GatherTermType@elec">
+                    t1.ratio
+                </if>
+                <if test="cls == @com.zhxx.energy.enums.GatherTermType@water">
+                    t1.tag_id, t1.use_type
+                </if>
+                <if test="cls == @com.zhxx.energy.enums.GatherTermType@gas">
+
+                </if>
+            </trim>
+        from gather_term t
+            left join equipment_manufacturer t2 on t.equipment_id=t2.id
+            left join
+        <if test="cls == @com.zhxx.energy.enums.GatherTermType@elec">gather_term_elec t1 on t.id=t1.id</if>
+        <if test="cls == @com.zhxx.energy.enums.GatherTermType@water">gather_term_water t1 on t.id=t1.id</if>
+        <if test="cls == @com.zhxx.energy.enums.GatherTermType@gas">gather_term_gas t1 on t.id=t1.id</if>
+        <where>
+            <if test="cls!=null">and t.cls=#{cls}</if>
+            <if test="deleted!=null">and t.deleted=#{deleted}</if>
+            <if test="name!=null and name!=''">and t.name like concat('%', #{name},'%')</if>
+        </where>
+    </select>
+
+    <select id="qryById" resultMap="clsBaseQryRm">
+        select *
+        from (
+            select * from gather_term where id=#{id}
+        ) t1 left join gather_term_elec t2 on t1.id=t2.id
+             left join gather_term_water t3 on t1.id=t3.id
+             left join gather_term_gas t4 on t1.id=t4.id
+    </select>
+
+</mapper>
