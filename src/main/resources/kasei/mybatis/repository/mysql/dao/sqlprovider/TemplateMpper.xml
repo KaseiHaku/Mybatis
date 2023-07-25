@@ -95,20 +95,19 @@
             SELECT LAST_INSERT_ID()
         </selectKey >
         insert into card(
-        id,
-        serial_number,
-        balance,
-        active,
-        create_time
+            id,
+            serial_number,
+            balance,
+            active,
+            create_time
         )
-        values
-        <foreach collection="list" separator="," item="item">
+        <foreach collection="list" open="values" separator="," item="item">
             (
-            #{item.id},
-            #{item.serial_number},
-            #{item.balance},
-            #{item.active},
-            #{item.create_time}
+                #{item.id},
+                #{item.serial_number},
+                #{item.balance},
+                #{item.active},
+                #{item.create_time}
             )
         </foreach>
     </insert>
