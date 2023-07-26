@@ -54,13 +54,25 @@ create table gather_term_gas(
                 <if test="cls == @com.zhxx.energy.enums.GatherTermType@gas">
 
                 </if>
+                <if test="cls!=@com.zhxx.energy.enums.GatherTermType@elec 
+                      and cls!=@com.zhxx.energy.enums.GatherTermType@water
+                      and cls!=@com.zhxx.energy.enums.GatherTermType@gas">
+                    t2.ratio, 
+                    t3.tag_id, t3.use_type,
+                </if>
             </trim>
         from gather_term t
             left join equipment_manufacturer t2 on t.equipment_id=t2.id
-            left join
-        <if test="cls == @com.zhxx.energy.enums.GatherTermType@elec">gather_term_elec t1 on t.id=t1.id</if>
-        <if test="cls == @com.zhxx.energy.enums.GatherTermType@water">gather_term_water t1 on t.id=t1.id</if>
-        <if test="cls == @com.zhxx.energy.enums.GatherTermType@gas">gather_term_gas t1 on t.id=t1.id</if>
+            <if test="cls == @com.zhxx.energy.enums.GatherTermType@elec">left join gather_term_elec t1 on t.id=t1.id</if>
+            <if test="cls == @com.zhxx.energy.enums.GatherTermType@water">left join gather_term_water t1 on t.id=t1.id</if>
+            <if test="cls == @com.zhxx.energy.enums.GatherTermType@gas">left join gather_term_gas t1 on t.id=t1.id</if>
+            <if test="cls!=@com.zhxx.energy.enums.GatherTermType@elec
+                      and cls!=@com.zhxx.energy.enums.GatherTermType@water
+                      and cls!=@com.zhxx.energy.enums.GatherTermType@gas">
+                left join gather_term_elec t2 on t.id=t2.id
+                left join gather_term_water t3 on t.id=t3.id
+                left join gather_term_gas t4 on t.id=t4.id
+            </if>
         <where>
             <if test="cls!=null">and t.cls=#{cls}</if>
             <if test="deleted!=null">and t.deleted=#{deleted}</if>
