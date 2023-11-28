@@ -18,7 +18,7 @@
         @trap 如果参数是 primitive/array/list，那么 xml 中 parameterType 属性可以不写
     
         func(String str)                                        #{value}                    // int long boolean 类似
-        func(Integer i, String str)                             #{param1}, #{param2}        // 不推荐
+        func(Integer i, String str)                             #{param1}, #{param2}        // 已废弃
         func(@Param("i") Integer i, @Param("str") String str)   #{i}, #{str}                // 推荐
         func(String[] aa)                                       foreach collection="array"  // Mybatis 内部自动封装成 Map，并设置 key 为 array 所以这里必须是 array
         func(List aa)                                           foreach collection="list"   // Mybatis 内部自动封装成 Map，并设置 key 为 list 所以这里必须是 list
