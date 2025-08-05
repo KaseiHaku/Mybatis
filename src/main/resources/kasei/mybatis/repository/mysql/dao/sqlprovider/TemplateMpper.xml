@@ -255,8 +255,9 @@
         </association>
 
         <!-- 和 association 没有任何区别，除了使用 ofType 来指定 Java 类型 -->
-        <collection property="" ofType="">
-            <result property="" column=""/>
+        <collection property="tags" ofType="Long">
+            <!-- <id property="id" column="post_id"/> 如果容器类型不是 POJO 类型，则不需要该标签 -->
+            <result column="tag_id"></result><!-- 如果容器类型是 Boolean, Long, String 等类型，直接声明一个这个标签即可 -->
         </collection>
         
         <!--类有继承关系，通过指定字段，来映射到不同的子类
