@@ -6,11 +6,15 @@
     
     <!--
         OGNL 官方文档: https://commons.apache.org/proper/commons-ognl/language-guide.html
+        OGNL GitHub 文档(较新)：https://github.com/orphan-oss/ognl/blob/main/docs/LanguageGuide.md
 
         MyBatis 可以使用 OGNL 表达式的地方：        
             1. <if test="OGNL">
             2. <select><bind value="OGNL"></select>
             3. ${OGNL}
+
+            以下表达式可能是 Mybatis 基于 OGNL 扩展的，也可以使用
+            user?.address?.city ?: 'Unknown'            # ?. 表示安全导航，前面为 null 不报错; ?: 表示如果前面为 null 则取后面的值返回
     -->
 
     <!--
